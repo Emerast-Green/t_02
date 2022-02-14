@@ -33,8 +33,8 @@ class Collider
                 ((pos[1]<=p[1] && p[1]<=pos[1]+size[1]) || (p[1]<=pos[1] && pos[1]<=p[1]+s[1])) // Overlaping on OY
                 );
         };
-        bool CheckCollisions(Symulation S);
-        bool Move(int mx,int my, Symulation S);
+        bool CheckCollisions(Symulation& S);
+        bool Move(int mx,int my, Symulation& S);
 };
 
 class Entity
@@ -43,7 +43,9 @@ class Entity
         std::string n;
     public:
         Collider hb;
+        Collider* ptr_hb = &hb;
         Entity_Type et;
+        Entity(){};
         Entity(int px,int py, int sx, int sy,std::string name,Entity_Type etype){
             n=name;
             et=etype;
@@ -55,6 +57,10 @@ class Entity
         std::string GetName(){
             return n;
         };
+        Entity& getThis()
+        {
+            return *this;
+        }
 };
 
 class Symulation
@@ -62,28 +68,39 @@ class Symulation
     private:
         int age;
     public:
-        std::list<Entity> ents; 
+        //std::list<Entity> ents; 
+        Entity* ents[16];
+        int ents_size = 0;
         Symulation(){age=0;};
         void Step(){age++;};
         int GetAge(){return age;};
-        int AddEntity(Entity e){
-            if(ents.size()<ents.max_size())
+        int AddEntity(Entity& e){
+            if(ents_size<16)
             {
-                ents.push_back(e);
-                return ents.size();
-            };return ents.size();
+                ents[ents_size]=&e;
+                ents_size++;
+                return ents_size;
+            };return ents_size;
+        };
+        void FetchData()
+        {
+            for(int i=0;i<ents_size;i++)
+            {
+                std::cout << ents[i]->GetName() << " " << ents[i]->hb.pos[0] << " " << ents[i]->hb.pos[1] <<std::endl;
+            };
         };
 };
 
-bool Collider::CheckCollisions(Symulation S)
+bool Collider::CheckCollisions(Symulation& S)
 {
     std::list<Entity>::iterator iter;
-    for(iter = S.ents.begin(); iter != S.ents.end(); iter++)
+    //for(iter = S.ents.begin(); iter != S.ents.end(); iter++)
+    for(int i=0;i<S.ents_size;i++)
     {
         //int roll = iter->roll;
         //if(*this->pos==*iter->hb.pos){std::cout << "this is myself (" << iter->GetName() << ")" <<std::endl;
         //}else{std::cout << iter->GetName() <<std::endl;};
-        if(!(*this->pos==*iter->hb.pos) && this->IsColliding(iter->hb))
+        if(!(*this->pos==*S.ents[i]->hb.pos) && this->IsColliding(S.ents[i]->hb))
         {
             //std:: cout << iter->GetName() << std::endl;
             return true;
@@ -92,9 +109,9 @@ bool Collider::CheckCollisions(Symulation S)
     return false;
 };
 
-bool Collider::Move(int mx,int my, Symulation S)
+bool Collider::Move(int mx,int my, Symulation& S)
 {
-    if(!this->CheckCollisions(S))
+    if(!CheckCollisions(S))
     {
         pos[0]=pos[0]+mx;
         pos[1]=pos[1]+my;

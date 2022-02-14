@@ -1,0 +1,89 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++.exe kompiluj aktywny plik",
+            "command": "D:\\TDM-GCC-64\\bin\\g++.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-IW:/Programowanie/C/SDL/t_02/SDL2/include", 
+                "-LW:/Programowanie/C/SDL/t_02/SDL2/lib",
+                "-Wall", 
+                "-lmingw32", 
+                "-lSDL2main", 
+                "-lSDL2",
+                "-std=gnu++11",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "Zadanie wygenerowane przez debuger."
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++.exe kompiluj aktywny plik ver(1)",
+            "command": "D:\\TDM-GCC-64\\bin\\g++.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-IW:/Programowanie/C/SDL/t_02/SDL2/include", 
+                "-LW:/Programowanie/C/SDL/t_02/SDL2/lib",
+                "-Wall", 
+                "-lmingw32", 
+                "-lSDL2main", 
+                "-lSDL2",
+                "-std=gnu++11",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "Zadanie wygenerowane przez debuger."
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++.exe kompiluj aktywny plik ver(2)",
+            "command": "D:\\TDM-GCC-64\\bin\\g++.exe",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-g",
+                "${file}",
+                "-IW:/Programowanie/C/SDL/t_02/SDL2/include", 
+                "-LW:/Programowanie/C/SDL/t_02/SDL2/lib",
+                "-Wall", 
+                "-lmingw32", 
+                "-lSDL2main", 
+                "-lSDL2",
+                "-std=gnu++11",
+                "-o",
+                "${fileDirname}\\${fileBasenameNoExtension}.exe"
+            ],
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Zadanie wygenerowane przez debuger."
+        }
+    ],
+    "version": "2.0.0"
+}
