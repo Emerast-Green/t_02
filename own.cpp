@@ -2,7 +2,7 @@
 #include <cstring>
 #include <iostream>
 #include <stdbool.h>
-#include <list>
+//#include <list>
 #include <typeinfo>
 
 
@@ -34,6 +34,7 @@ class Collider
                 );
         };
         bool CheckCollisions(Symulation& S);
+        bool CheckCollisions(Symulation& S,int pos[2],int size[2]);
         bool Move(int mx,int my, Symulation& S);
 };
 
@@ -93,7 +94,7 @@ class Symulation
 
 bool Collider::CheckCollisions(Symulation& S)
 {
-    std::list<Entity>::iterator iter;
+    //std::list<Entity>::iterator iter;
     //for(iter = S.ents.begin(); iter != S.ents.end(); iter++)
     for(int i=0;i<S.ents_size;i++)
     {
@@ -109,9 +110,30 @@ bool Collider::CheckCollisions(Symulation& S)
     return false;
 };
 
+bool Collider::CheckCollisions(Symulation& S,int p[2],int s[2])
+{
+   // std::list<Entity>::iterator iter;
+    //for(iter = S.ents.begin(); iter != S.ents.end(); iter++)
+    for(int i=0;i<S.ents_size;i++)
+    {
+        //int roll = iter->roll;
+        //if(*this->pos==*iter->hb.pos){std::cout << "this is myself (" << iter->GetName() << ")" <<std::endl;
+        //}else{std::cout << iter->GetName() <<std::endl;};
+        if(!(*this->pos==*S.ents[i]->hb.pos) && S.ents[i]->hb.IsColliding(p,s))
+        {
+            //std:: cout << iter->GetName() << std::endl;
+            return true;
+        };
+    };
+    return false;
+};
+
 bool Collider::Move(int mx,int my, Symulation& S)
 {
-    if(!CheckCollisions(S))
+    int pos_[2];
+    pos_[0] = pos[0]+mx;
+    pos_[1] = pos[1]+my;
+    if(!CheckCollisions(S,pos_,size))
     {
         pos[0]=pos[0]+mx;
         pos[1]=pos[1]+my;

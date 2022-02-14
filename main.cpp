@@ -9,7 +9,7 @@
 
 #define WIDTH 640
 #define HEIGHT 480
-#define FPS 30
+#define FPS 60
 #define SIZE 100
 
 
@@ -54,7 +54,7 @@ class Custom_Renderer
         rect.x=S.ents[i]->hb.pos[0]; rect.y=S.ents[i]->hb.pos[1];
         rect.w=S.ents[i]->hb.size[0];rect.h=S.ents[i]->hb.size[1];
         SDL_SetRenderDrawColor(rend, colors.at(S.ents[i]->et).r, colors.at(S.ents[i]->et).g, colors.at(S.ents[i]->et).b, 255);
-        if(S.ents[i]->GetName()=="test1"){std::cout << S.ents[i]->hb.pos[1] << "|" << rect.y << "|" << &S.ents[i]->ptr_hb << "|" << &S.ents[i] << "|" << &S << std::endl;};
+        //if(S.ents[i]->GetName()=="test1"){std::cout << S.ents[i]->hb.pos[1] << "|" << rect.y << "|" << &S.ents[i]->ptr_hb << "|" << &S.ents[i] << "|" << &S << std::endl;};
         SDL_RenderFillRect(rend, &rect);
       };
       return 0;
@@ -99,6 +99,10 @@ int main(int argc, char* argv[])
   sym.AddEntity(t2.getThis());
   SDL_Event event;
   bool running = true;
+  bool move_down = false;
+  bool move_up = false;
+  bool move_right = false;
+  bool move_left = false;
 
   /*Loop */
   while(running)
@@ -118,12 +122,16 @@ int main(int argc, char* argv[])
             case SDL_SCANCODE_Q:
               break;
             case SDL_SCANCODE_S:
+              move_down=true;
               break;
             case SDL_SCANCODE_W:
+              move_up=true;
               break;
             case SDL_SCANCODE_D:
+              move_right=true;
               break;
             case SDL_SCANCODE_A:
+              move_left=true;
               break;
             default:
               break;
@@ -133,12 +141,16 @@ int main(int argc, char* argv[])
           switch(event.key.keysym.scancode)
           {
             case SDL_SCANCODE_S:
+              move_down=false;
               break;
             case SDL_SCANCODE_W:
+              move_up=false;
               break;
             case SDL_SCANCODE_D:
+              move_right=false;
               break;
             case SDL_SCANCODE_A:
+              move_left=false;
               break;
             default:
               break;
@@ -148,14 +160,20 @@ int main(int argc, char* argv[])
           break;
       };
     };
+    /*Do stuff*/
+    if(move_down){t1.hb.Move(0,1,sym);};
+    if(move_up){t1.hb.Move(0,-1,sym);};
+    if(move_right){t1.hb.Move(1,0,sym);};
+    if(move_left){t1.hb.Move(-1,0,sym);};
     /*Clear*/
     SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
     SDL_RenderClear(rend);
     /*Render widgets*/
     cust_rend.Draw(rend,sym);
-    std::cout << t1.hb.pos[0] << "/" << t1.hb.pos[1] << "/" << &t1.ptr_hb << "/" << &t1 << "/" << &sym << std::endl;
-    std::cout << "COLL:" << t1.hb.Move(0,1,sym) << std::endl;
-    sym.FetchData();
+    //std::cout << t1.hb.pos[0] << "/" << t1.hb.pos[1] << "/" << &t1.ptr_hb << "/" << &t1 << "/" << &sym << std::endl;
+    //std::cout << "COLL:" << t1.hb.Move(0,1,sym) << std::endl;
+
+    //sym.FetchData();
     //std::cout <<  << " " << t1.hb.pos[1] <<std::endl; 
     /* Draw to window and loop */
     SDL_RenderPresent(rend);
