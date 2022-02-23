@@ -34,10 +34,10 @@ class Custom_Renderer
   public:
     SDL_Renderer* rend;
     int entity_color[3];
-    void init(Colour pl_col,Colour st_col, Colour it_col, Colour npc_col)
+    void init(Colour pl_col,Colour gr_col, Colour it_col, Colour npc_col)
     {
       colors.insert(std::pair<Entity_Type,Colour>(Player,pl_col));
-      colors.insert(std::pair<Entity_Type,Colour>(Storage,st_col));
+      colors.insert(std::pair<Entity_Type,Colour>(Ground,gr_col));
       colors.insert(std::pair<Entity_Type,Colour>(Item,it_col));
       colors.insert(std::pair<Entity_Type,Colour>(NPC,npc_col));
     };
@@ -89,12 +89,12 @@ int main(int argc, char* argv[])
   cust_rend.rend = rend;
   Symulation sym;
   Colour pl_col(0,255,0);
-  Colour st_col(255,0,0);
+  Colour gr_col(255,0,0);
   Colour it_col(255,0,255);
   Colour npc_col(0,0,255);
-  cust_rend.init(pl_col,st_col,it_col,npc_col);
+  cust_rend.init(pl_col,gr_col,it_col,npc_col);
   Entity t1(10,10,200,200,"test1",Player);
-  Entity t2(0,300,50,50,"hitbox1",NPC);
+  Entity t2(0,440,640,40,"ground",Ground);
   sym.AddEntity(t1.getThis());
   sym.AddEntity(t2.getThis());
   SDL_Event event;
@@ -103,6 +103,8 @@ int main(int argc, char* argv[])
   bool move_up = false;
   bool move_right = false;
   bool move_left = false;
+  float move_speed = .75;
+  int max_speed = 5;
 
   /*Loop */
   while(running)
@@ -133,6 +135,10 @@ int main(int argc, char* argv[])
             case SDL_SCANCODE_A:
               move_left=true;
               break;
+            case SDL_SCANCODE_LSHIFT:
+              move_speed=2;
+              max_speed=10;
+              break;
             default:
               break;
           };
@@ -152,6 +158,10 @@ int main(int argc, char* argv[])
             case SDL_SCANCODE_A:
               move_left=false;
               break;
+            case SDL_SCANCODE_LSHIFT:
+              move_speed=.75;
+              max_speed=5;
+              break;
             default:
               break;
           };
@@ -161,10 +171,17 @@ int main(int argc, char* argv[])
       };
     };
     /*Do stuff*/
-    if(move_down){t1.hb.Move(0,1,sym);};
-    if(move_up){t1.hb.Move(0,-1,sym);};
-    if(move_right){t1.hb.Move(1,0,sym);};
-    if(move_left){t1.hb.Move(-1,0,sym);};
+    // if(move_down){t1.hb.MoveA(0,move_speed,sym);};
+    // if(move_up){t1.hb.MoveA(0,-move_speed,sym);};
+    // if(move_right){t1.hb.MoveA(move_speed,0,sym);};
+    // if(move_left){t1.hb.MoveA(-move_speed,0,sym);};
+    // if(!t1.hb.CheckCollisions(sym)){t1.hb.Move(0,1,sym);};
+    if(move_down){t1.speed[1]=t1.speed[1]+move_speed;};
+    if(move_up){t1.speed[1]=t1.speed[1]-move_speed;};
+    if(move_right){t1.speed[0]=t1.speed[0]+move_speed;};
+    if(move_left){t1.speed[0]=t1.speed[0]-move_speed;};
+    t1.max_speed=max_speed;
+    t1.Move(sym);
     /*Clear*/
     SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
     SDL_RenderClear(rend);

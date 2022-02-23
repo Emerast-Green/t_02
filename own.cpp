@@ -5,8 +5,9 @@
 //#include <list>
 #include <typeinfo>
 #include <cmath>
+#include <math.h>
 
-enum Entity_Type { Player, Storage, Item, NPC };
+enum Entity_Type { Player, Ground, Item, NPC };
 class Symulation;
 //class Entity;
 
@@ -44,11 +45,15 @@ class Entity
     private:
         std::string n;
     public:
+        float speed[2];
+        int max_speed;
         Collider hb;
         Collider* ptr_hb = &hb;
         Entity_Type et;
         Entity(){};
         Entity(int px,int py, int sx, int sy,std::string name,Entity_Type etype){
+            speed[0]=0;speed[1]=0;
+            max_speed = 5;
             n=name;
             et=etype;
           //  hitbox.pos[0] = px ; hitbox.pos[1] = py;
@@ -62,7 +67,8 @@ class Entity
         Entity& getThis()
         {
             return *this;
-        }
+        };
+        void Move(Symulation &S);
 };
 
 class Symulation
@@ -73,7 +79,8 @@ class Symulation
         //std::list<Entity> ents; 
         Entity* ents[16];
         int ents_size = 0;
-        Symulation(){age=0;};
+        float air_friction;
+        Symulation(){age=0;air_friction=.25;};
         void Step(){age++;};
         int GetAge(){return age;};
         int AddEntity(Entity& e){
@@ -153,6 +160,43 @@ void Collider::MoveA(int mx,int my,Symulation& S)
         tmp[0]=tmp[0]+mx/dist;tmp[1]=tmp[1]+my/dist;
         if(!this->Move((int)tmp[0],(int)tmp[1],S)){break;};
     };
+};
+
+void Entity::Move(Symulation &S)
+{
+    if(speed[0]>0){speed[0]=speed[0]-S.air_friction;};
+    if(speed[0]<0){speed[0]=speed[0]+S.air_friction;};
+    if(speed[1]>0){speed[1]=speed[1]-S.air_friction;};
+    if(speed[1]<0){speed[1]=speed[1]+S.air_friction;};
+    if(speed[0]>max_speed){speed[0]=(float)this->max_speed;};
+    if(speed[0]<-max_speed){speed[0]=(float)-this->max_speed;};
+    if(speed[1]>max_speed){speed[1]=(float)this->max_speed;};
+    if(speed[1]<-max_speed){speed[1]=(float)-this->max_speed;};
+    hb.MoveA((int)speed[0],(int)speed[1],S);
+};
+
+class V_cust
+{
+    public:
+        int angle;
+        float value;
+        float max_value;
+        float vector[2];
+        V_cust(float mv){angle=0;value=(float)0;max_value=mv;};
+        V_cust(float ox,float oy)
+        {
+            value = sqrt(pow(ox,2)+pow(oy,2));
+            angle = asin(oy/value);
+        };
+        float* GetVector()
+        {
+            vector[0]=cos(angle)*value;vector[1]=sin(angle)*value;
+            return vector;
+        };
+        void Add(V_cust other)
+        {
+            //TODO: Add not ready
+        };
 };
 
 // int main()
