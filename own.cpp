@@ -4,7 +4,7 @@
 #include <stdbool.h>
 //#include <list>
 #include <typeinfo>
-
+#include <cmath>
 
 enum Entity_Type { Player, Storage, Item, NPC };
 class Symulation;
@@ -36,6 +36,7 @@ class Collider
         bool CheckCollisions(Symulation& S);
         bool CheckCollisions(Symulation& S,int pos[2],int size[2]);
         bool Move(int mx,int my, Symulation& S);
+        void MoveA(int mx,int my, Symulation& S);
 };
 
 class Entity
@@ -141,6 +142,17 @@ bool Collider::Move(int mx,int my, Symulation& S)
         return true;
     };
     return false;
+};
+
+void Collider::MoveA(int mx,int my,Symulation& S)
+{
+    float tmp[2];tmp[0]=0.0;tmp[1]=0.0;
+    float dist;dist=sqrt(pow(mx,2)+pow(my,2));
+    for(int i=0;i<(int)dist;i++)
+    {
+        tmp[0]=tmp[0]+mx/dist;tmp[1]=tmp[1]+my/dist;
+        if(!this->Move((int)tmp[0],(int)tmp[1],S)){break;};
+    };
 };
 
 // int main()
