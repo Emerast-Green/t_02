@@ -175,27 +175,22 @@ void Entity::Move(Symulation &S)
     hb.MoveA((int)speed[0],(int)speed[1],S);
 };
 
-class V_cust
+class Motion_Vector:
 {
     public:
-        int angle;
-        float value;
-        float max_value;
-        float vector[2];
-        V_cust(float mv){angle=0;value=(float)0;max_value=mv;};
-        V_cust(float ox,float oy)
+        float angle;
+        float power;
+        int x; int y;
+        float mpower;
+        Motion_Vector(){angle=(float)0;power=(float)0;x=0;y=0;mpower=(float)0;};
+        Motion_Vector(float mpower){angle=(float)0;power=(float)0;x=0;y=0;this->mpower=mpower;};
+        void Refresh(){x=cos(angle)*power;y=sin(angle)*power;};
+        void Change(int ox,int oy)
         {
-            value = sqrt(pow(ox,2)+pow(oy,2));
-            angle = asin(oy/value);
-        };
-        float* GetVector()
-        {
-            vector[0]=cos(angle)*value;vector[1]=sin(angle)*value;
-            return vector;
-        };
-        void Add(V_cust other)
-        {
-            //TODO: Add not ready
+            x=x+ox;y=y+oy;
+            power = sqrt(pow(x,2)+pow(y,2));
+            if(power>mpower){power=mpower;};
+            this->Refresh();
         };
 };
 

@@ -1,0 +1,1 @@
+%~d0\PortableGit\git-cmd.exe 

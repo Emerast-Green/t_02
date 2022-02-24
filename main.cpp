@@ -137,7 +137,7 @@ int main(int argc, char* argv[])
               break;
             case SDL_SCANCODE_LSHIFT:
               move_speed=2;
-              max_speed=10;
+              max_speed=8;
               break;
             default:
               break;
